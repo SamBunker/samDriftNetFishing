@@ -38,42 +38,50 @@ public class ReturnToArea extends Task {
         }
     }
 
-    public void InUnderwaterEntrance() {
+    public void I() {
         Condition.wait(() -> Constants.UNDER_WATER_NEXT_TO_ANCHOR.contains(Players.local()) || Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local()), 100, 18);
-        Movement.moveTo(Constants.UNDER_WATER_NEXT_TO_TUNNEL.getRandomTile());
-        Condition.wait(() -> !Players.local().inMotion() || Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local()), 80, 15);
+        
+        if (!Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local())) {
+            Movement.moveTo(Constants.UNDER_WATER_NEXT_TO_TUNNEL.getRandomTile());
+            Condition.wait(() -> !Players.local().inMotion() || Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local()), 80, 15);
+        }
         Npc Ceto = Npcs.stream().name(Constants.TUNNEL_ENTRANCE_NPC).nearest().first();
+        
         if (Ceto.valid()) {
+            if (!Ceto.inViewport()) {
+                Camera.turnTo(Ceto);
+                // Complete a condition wait check for adjusting the camera
+                Movement.moveTo(Ceto);
+                Condition.wait(() -> !Players.local().inMotion(), 80, 15);
+                // Ceto should now be in Viewport
+            }
             if (Ceto.inViewport()) {
                 Ceto.interact("Pay");
                 if (Chat.chatting()) {
-                    Condition.wait(() -> !Chat.chatting(), 20, 10);
+                    Condition.wait(() -> Chat.chatting(), 20, 10);
                     if (Chat.canContinue()) {
-                        if (Chat.continueChat()) {
-                            Condition.wait(() -> !Chat.canContinue(), 300, 10);
-                            if (Chat.canContinue()) {
-                                if (Chat.continueChat("Okay, here's 200 numulites.")) {
-                                    Condition.wait(() -> !Chat.canContinue(), 300, 10);
-                                    if (Chat.canContinue()) {
-                                        if (Chat.continueChat()) {
-                                            Condition.wait(() -> !Chat.canContinue(), 300, 10);
-                                        }
+                        if (Chat.continueChat("Tap here to continue")) {
+                            if (!Chat.canContinue()) {
+                                Condition.wait(() -> !Chat.chatting(), 40, 10);
+                                GameObject tunnel_entrance = Objects.stream().name(Constants.TUNNEL).nearest().first();
+                                if (tunnel_entrance.valid()) {
+                                    if (tunnel_entrance.inViewport()) {
+                                        tunnel_entrance.interact("Enter");
+                                        Condition.wait(() -> Constants.DRIFT_ENTRANCE.contains(Players.local()), 100, 18);
+                                    } else if (!tunnel_entrance.inViewport()) {
+                                        Camera.turnTo(tunnel_entrance);
+                                        // Condition wait for adjusting camera angles
+                                        Movement.moveTo(tunnel_entrance);
+                                        Condition.wait(() -> !Players.local().inMotion(), 70, 10);
+                                        tunnel_entrance.interact("Enter");
+                                        Condition.wait(() -> Constants.DRIFT_ENTRANCE.contains(Players.local()), 100, 18);
                                     }
                                 }
-                            }
-
-                        } else {
-                            GameObject tunnel_entrance = Objects.stream().name(Constants.TUNNEL).nearest().first();
-                            if (tunnel_entrance.valid()) {
-                                if (tunnel_entrance.inViewport()) {
-                                    tunnel_entrance.interact("Enter");
-                                    Condition.wait(() -> Constants.DRIFT_ENTRANCE.contains(Players.local()), 100, 18);
-                                } else if (!tunnel_entrance.inViewport()) {
-                                    Camera.turnTo(tunnel_entrance);
-                                    Movement.moveTo(tunnel_entrance);
-                                    Condition.wait(() -> !Players.local().inMotion(), 70, 10);
-                                    tunnel_entrance.interact("Enter");
-                                    Condition.wait(() -> Constants.DRIFT_ENTRANCE.contains(Players.local()), 100, 18);
+                            } else {
+                                Condition.wait(() -> Chat.canContinue(), 20, 10);
+                                if (Chat.completeChat(*arrayOf("Okay, here's 200 numulites.", "Tap here to continue"))) {
+                                    Condition.wait(() -> !Chat.chatting(), 500, 10);
+                                    // You will automatically enter the location now.
                                 }
                             }
                         }

@@ -43,7 +43,7 @@ import java.util.ArrayList;
                 name = "NumuliteUnlock",
                 allowedValues = {"Yes", "No"},
                 defaultValue = "No",
-                description = "Did you pay 20,000 numulite for permanent access to drift net fishing?"
+                description = "Did you pay 20,000 numulite for permanent access to drift net fishing? If not, grab Numulite from bank."
         )
 })
 
