@@ -1,7 +1,4 @@
 package org.sam;
-import org.powbot.api.Notifications;
-import org.powbot.api.rt4.Constants;
-import org.powbot.api.rt4.Game;
 import org.powbot.api.script.*;
 import org.powbot.mobile.script.ScriptManager;
 import org.powbot.mobile.service.ScriptUploader;
@@ -11,6 +8,44 @@ import org.sam.Tasks.LootNet;
 import org.sam.Tasks.SeaweedSporePickup;
 
 import java.util.ArrayList;
+
+@ScriptConfiguration.List({
+        @ScriptConfiguration(
+                name = "Harpoon",
+                allowedValues = {"Merfolk trident", "Trident of the seas", "Trident of the swamp", "Dragon harpoon", "Harpoon"},
+                defaultValue = "Dragon harpoon",
+                description = "Which trident or harpoon are you using?"
+        ),
+        @ScriptConfiguration(
+                name = "Fishbowl",
+                allowedValues = {"Fishbowl Helmet Equipped Already.", "Grab from Bank", "I do not have."},
+                defaultValue = "Fishbowl Helmet Equipped Already.",
+                description = "Are you wearing a fishbowl helmet?"
+        ),
+        @ScriptConfiguration(
+                name = "Apparatus",
+                allowedValues = {"Diving Apparatus Equipped Already.", "Grab from Bank", "I do not have."},
+                defaultValue = "Diving Apparatus Equipped Already.",
+                description = "Are you wearing a Diving Apparatus?"
+        ),
+        @ScriptConfiguration(
+                name = "Flippers",
+                allowedValues = {"Flippers Equipped Already.", "Grab from Bank", "I do not have."},
+                defaultValue = "Flippers Equipped Already.",
+                description = "Are you wearing Flippers?"
+        ),
+        @ScriptConfiguration(
+                name = "Stamina",
+                description = "Use Stamina Potions?",
+                optionType = OptionType.BOOLEAN
+        ),
+        @ScriptConfiguration(
+                name = "NumuliteUnlock",
+                allowedValues = {"Yes", "No"},
+                defaultValue = "No",
+                description = "Did you pay 20,000 numulite for permanent access to drift net fishing?"
+        )
+})
 
 @ScriptManifest(
         name = "Sam's Drift Net Fishing",
@@ -28,14 +63,10 @@ public class DriftNetFishing extends AbstractScript {
 
     @Override
     public void onStart() {
-        if (Game.loggedIn()) {
-            taskList.add(new BuildNet(this));
-            taskList.add(new LootNet(this));
-            taskList.add(new SeaweedSporePickup(this));
-            taskList.add(new ChaseFish(this));
-        } else {
-            ScriptManager.INSTANCE.stop();
-        }
+        taskList.add(new BuildNet(this));
+        taskList.add(new LootNet(this));
+        taskList.add(new SeaweedSporePickup(this));
+        taskList.add(new ChaseFish(this));
     }
 
     @Override

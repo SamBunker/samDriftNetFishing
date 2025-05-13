@@ -1,5 +1,6 @@
 package org.sam.Tasks;
 import org.powbot.api.Condition;
+import org.powbot.api.Notifications;
 import org.powbot.api.rt4.*;
 import org.sam.Task;
 import org.sam.Constants;
@@ -53,6 +54,8 @@ public class ChaseFish extends Task {
                 Camera.turnTo(target);
                 Movement.step(target.tile());
             }
+        } else {
+            Notifications.showNotification("No fish found! What the heck?");
         }
     }
 }
