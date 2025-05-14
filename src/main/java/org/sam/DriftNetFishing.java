@@ -14,25 +14,41 @@ import java.util.ArrayList;
                 name = "Harpoon",
                 allowedValues = {"Merfolk trident", "Trident of the seas", "Trident of the swamp", "Dragon harpoon", "Harpoon"},
                 defaultValue = "Dragon harpoon",
-                description = "Which trident or harpoon are you using?"
+                description = "Which trident or harpoon are you using?",
+                optionType = OptionType.STRING
         ),
         @ScriptConfiguration(
-                name = "Fishbowl",
-                allowedValues = {"Fishbowl Helmet Equipped Already.", "Grab from Bank", "I do not have."},
-                defaultValue = "Fishbowl Helmet Equipped Already.",
-                description = "Are you wearing a fishbowl helmet?"
+                name = "HarpoonInfo",
+                allowedValues = {"Harpoon/Trident Equipped Already", "Grab from Bank", "I do not have"},
+                defaultValue = "Harpoon/Trident Equipped Already",
+                description = "Are you wearing your Harpoon/Trident?",
+                optionType = OptionType.STRING
         ),
         @ScriptConfiguration(
-                name = "Apparatus",
-                allowedValues = {"Diving Apparatus Equipped Already.", "Grab from Bank", "I do not have."},
-                defaultValue = "Diving Apparatus Equipped Already.",
-                description = "Are you wearing a Diving Apparatus?"
+                name = "FishbowlInfo",
+                allowedValues = {"Fishbowl Helmet Equipped Already", "Grab from Bank", "I do not have"},
+                defaultValue = "Fishbowl Helmet Equipped Already",
+                description = "Are you wearing a fishbowl helmet?",
+                optionType = OptionType.STRING
         ),
         @ScriptConfiguration(
-                name = "Flippers",
-                allowedValues = {"Flippers Equipped Already.", "Grab from Bank", "I do not have."},
-                defaultValue = "Flippers Equipped Already.",
-                description = "Are you wearing Flippers?"
+                name = "ApparatusInfo",
+                allowedValues = {"Diving Apparatus Equipped Already", "Grab from Bank", "I do not have"},
+                defaultValue = "Diving Apparatus Equipped Already",
+                description = "Are you wearing a Diving Apparatus?",
+                optionType = OptionType.STRING
+        ),
+        @ScriptConfiguration(
+                name = "FlippersInfo",
+                allowedValues = {"Flippers Equipped Already", "Grab from Bank", "I do not have"},
+                defaultValue = "Flippers Equipped Already",
+                description = "Are you wearing Flippers?",
+                optionType = OptionType.STRING
+        ),
+        @ScriptConfiguration(
+                name = "Graceful",
+                description = "Equip Graceful?",
+                optionType = OptionType.BOOLEAN
         ),
         @ScriptConfiguration(
                 name = "Stamina",
@@ -41,9 +57,8 @@ import java.util.ArrayList;
         ),
         @ScriptConfiguration(
                 name = "NumuliteUnlock",
-                allowedValues = {"Yes", "No"},
-                defaultValue = "No",
-                description = "Did you pay 20,000 numulite for permanent access to drift net fishing? If not, grab Numulite from bank."
+                description = "Did you pay 20,000 numulite for permanent access to drift net fishing? If not, grab Numulite from bank.",
+                optionType = OptionType.BOOLEAN
         )
 })
 
@@ -52,9 +67,18 @@ import java.util.ArrayList;
         description = "Begin in area, discards fish.",
         author = "Sam",
         version = "1",
-        category = ScriptCategory.Fishing
+        category = ScriptCategory.Fishing, ScriptCategory.Hunter
 )
 public class DriftNetFishing extends AbstractScript {
+        var NumuliteUnlock = false;
+        var Harpoon = "";
+        var HarpoonInfo = false;
+        var FishbowlInfo = "";
+        var ApparatusInfo = "";
+        var FlippersInfo = "";
+        var Stamina = false;
+        var Graceful = true;
+
     private final ArrayList<Task> taskList = new ArrayList<Task>();
 
     public static void main(String[] args) {
@@ -63,6 +87,16 @@ public class DriftNetFishing extends AbstractScript {
 
     @Override
     public void onStart() {
+        NumuliteUnlock = getOption("NumuliteUnlock");
+        Harpoon = getOption("Harpoon");
+        HarpoonInfo = getOption("HarpoonInfo");
+        FishbowlInfo = getOption("FishbowlInfo");
+        ApparatusInfo = getOption("ApparatusInfo");
+        FlippersInfo = getOption("FlippersInfo");
+        Graceful = getOption("Graceful");
+        Stamina = getOption("Stamina");
+        taskList.add(new Banking(this, NumuliteUnlock, Harpoon, HarpoonInfo, FishbowlInfo, ApparatusInfo, FlippersInfo, Graceful, Stamina));
+        taskList.add(new ReturnToArea(this));
         taskList.add(new BuildNet(this));
         taskList.add(new LootNet(this));
         taskList.add(new SeaweedSporePickup(this));
