@@ -14,11 +14,13 @@ import org.sam.Task;
 
 public class ReturnToArea extends Task {
     DriftNetFishing main;
+    private final BOOLEAN numuliteUnlock;
 
-    public ReturnToArea(DriftNetFishing main) {
+    public ReturnToArea(DriftNetFishing main, BOOLEAN numuliteUnlock) {
         super();
         super.name = "Return to Area";
         this.main = main;
+        this.numuliteUnlock = numuliteUnlock;
     }
 
     public void InDriftEntrance() {
@@ -38,11 +40,11 @@ public class ReturnToArea extends Task {
         }
     }
 
-    public void I() {
+    public void InUnderwaterEntrance() {
         Condition.wait(() -> Constants.UNDER_WATER_NEXT_TO_ANCHOR.contains(Players.local()) || Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local()), 100, 18);
         
         if (!Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local())) {
-            Movement.moveTo(Constants.UNDER_WATER_NEXT_TO_TUNNEL.getRandomTile());
+            Movement.step(Constants.UNDER_WATER_NEXT_TO_TUNNEL.getRandomTile());
             Condition.wait(() -> !Players.local().inMotion() || Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local()), 80, 15);
         }
         Npc Ceto = Npcs.stream().name(Constants.TUNNEL_ENTRANCE_NPC).nearest().first();
@@ -51,9 +53,8 @@ public class ReturnToArea extends Task {
             if (!Ceto.inViewport()) {
                 Camera.turnTo(Ceto);
                 // Complete a condition wait check for adjusting the camera
-                Movement.moveTo(Ceto);
+                Movement.moveTo(Ceto); //BUG? May need to rewrite functionality with movement from moveTo to step, though. How does movement work towards an NPC?
                 Condition.wait(() -> !Players.local().inMotion(), 80, 15);
-                // Ceto should now be in Viewport
             }
             if (Ceto.inViewport()) {
                 Ceto.interact("Pay");
@@ -91,8 +92,16 @@ public class ReturnToArea extends Task {
         }
     }
 
+
+
     public void OnIsland() {
         Condition.wait(() -> Constants.ON_ISLAND.contains(Players.local()), 100, 18);
+        
+
+
+        if (numuliteUnlock = false) {
+            // 
+        }
         Item weapon = Equipment.itemAt(Equipment.Slot.MAIN_HAND);
         Item offhand = Equipment.itemAt(Equipment.Slot.OFF_HAND);
 //        Open equipment widget
@@ -145,44 +154,22 @@ public class ReturnToArea extends Task {
             ScriptManager.INSTANCE.stop();
         }
 
+            Item weapon = Equipment.itemAt(Equipment.Slot.MAIN_HAND);
 
-        if (!Constants.DRIFT_ENTRANCE.contains(Players.local()) && !Constants.DRIFT_NET_AREA.contains(Players.local())) {
-            Notifications.showNotification("Outside of bounds. Stopping Script!");
-            ScriptManager.INSTANCE.stop();
-        }
-        if (Constants.DRIFT_ENTRANCE.contains(Players.local())) {
-            if (Calculations.weight() > 24) {
-                Item weapon = Equipment.itemAt(Equipment.Slot.MAIN_HAND);
-
-                if (weapon.valid()) {
-                    if (Inventory.isFull()) {
-                        Notifications.showNotification("Can't unequip item-inventory is full.");
-                        ScriptManager.INSTANCE.stop();
-                        return;
-                    }
-
-                    if (weapon.interact("Remove")) {
-                        Condition.wait(() -> !Equipment.itemAt(Equipment.Slot.MAIN_HAND).valid(), 100, 20);
-                        Notifications.showNotification("Unequipped item to reduce weight");
-                    }
-                } else {
-                    Notifications.showNotification("Overweight but nothing to unequip. Too much weight in inventory!");
+            if (weapon.valid()) {
+                if (Inventory.isFull()) {
+                    Notifications.showNotification("Can't unequip item-inventory is full.");
                     ScriptManager.INSTANCE.stop();
+                    return;
                 }
-            }
-            GameObject gate = Objects.stream().action("Pass").nearest().first();
-            if (gate.valid()) {
-                if (!gate.inViewport()) {
-                    Camera.turnTo(gate);
-                    Movement.moveTo(gate);
-                }
-                if (gate.interact("Pass")) {
-                    Condition.wait(() -> Players.local().inMotion && Constants.DRIFT_NET_AREA.contains(Players.local()), 100, 18);
+
+                if (weapon.interact("Remove")) {
+                    Condition.wait(() -> !Equipment.itemAt(Equipment.Slot.MAIN_HAND).valid(), 100, 20);
+                    Notifications.showNotification("Unequipped item to reduce weight");
                 }
             } else {
-                Notifications.showNotification("Unable to locate gate. Stopping Script");
+                Notifications.showNotification("Overweight but nothing to unequip. Too much weight in inventory!");
                 ScriptManager.INSTANCE.stop();
-
             }
         }
     }
