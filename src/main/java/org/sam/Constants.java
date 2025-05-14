@@ -48,7 +48,7 @@ public class Constants {
     public static Area UNDER_WATER_NEXT_TO_ANCHOR = new Area(new Tile(3737, 10277, 1), new Tile(3725, 10283, 1));
     public static Area UNDER_WATER_NEXT_TO_TUNNEL = new Area(new Tile(3730, 10292, 1), new Tile(3728, 10294, 1));
     public static final String TUNNEL = "Tunnel";
-    public static final String NUMULITE = "Numulite";
+
 //    Enter Tunnel
 
     public static final String TUNNEL_ENTRANCE_NPC = "Ceto";
@@ -69,4 +69,14 @@ public class Constants {
     public static final String NET_NAME = "Drift net";
     public static final String PLANT_DOOR = "Plant door";
 //    Navigate to begin the minigame
+
+// ITEMS
+    public static final String FISHBOWL_HELMET = "Fishbowl helmet";
+    public static final String DIVING_APPARATUS = "Diving apparatus";
+    public static final String FLIPPERS = "Flippers";
+    public static final String STAMINA_FOUR = "Stamina potion(4)";
+    public static final String STAMINA_THREE = "Stamina potion(3)";
+    public static final String STAMINA_TWO = "Stamina potion(2)";
+    public static final String STAMINA_ONE = "Stamina potion(1)";
+    public static final String NUMULITE = "Numulite";
 }
