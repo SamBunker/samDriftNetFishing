@@ -1,12 +1,9 @@
 package org.sam.Tasks;
 
-import org.powbot.api.Calculations;
 import org.powbot.api.Condition;
 import org.powbot.api.Notifications;
 import org.powbot.api.rt4.*;
-import org.powbot.mobile.Con;
 import org.powbot.mobile.script.ScriptManager;
-import org.powbot.proto.rt4.WebWalking;
 import org.sam.Constants;
 import org.sam.DriftNetFishing;
 import org.sam.Task;
@@ -14,9 +11,9 @@ import org.sam.Task;
 
 public class ReturnToArea extends Task {
     DriftNetFishing main;
-    private final BOOLEAN numuliteUnlock;
+    private final Boolean numuliteUnlock;
 
-    public ReturnToArea(DriftNetFishing main, BOOLEAN numuliteUnlock) {
+    public ReturnToArea(DriftNetFishing main, Boolean numuliteUnlock) {
         super();
         super.name = "Return to Area";
         this.main = main;
@@ -41,19 +38,12 @@ public class ReturnToArea extends Task {
     }
 
     public void InUnderwaterEntrance() {
-        Condition.wait(() -> Constants.UNDER_WATER_NEXT_TO_ANCHOR.contains(Players.local()) || Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local()), 100, 18);
-        
-        if (!Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local())) {
-            Movement.step(Constants.UNDER_WATER_NEXT_TO_TUNNEL.getRandomTile());
-            Condition.wait(() -> !Players.local().inMotion() || Constants.UNDER_WATER_NEXT_TO_TUNNEL.contains(Players.local()), 80, 15);
-        }
         Npc Ceto = Npcs.stream().name(Constants.TUNNEL_ENTRANCE_NPC).nearest().first();
         
         if (Ceto.valid()) {
             if (!Ceto.inViewport()) {
                 Camera.turnTo(Ceto);
-                // Complete a condition wait check for adjusting the camera
-                Movement.moveTo(Ceto); //BUG? May need to rewrite functionality with movement from moveTo to step, though. How does movement work towards an NPC?
+                Movement.moveTo(Ceto);
                 Condition.wait(() -> !Players.local().inMotion(), 80, 15);
             }
             if (Ceto.inViewport()) {
@@ -79,8 +69,8 @@ public class ReturnToArea extends Task {
                                     }
                                 }
                             } else {
-                                Condition.wait(() -> Chat.canContinue(), 20, 10);
-                                if (Chat.completeChat(*arrayOf("Okay, here's 200 numulites.", "Tap here to continue"))) {
+                                Condition.wait(() -> !Chat.chatting(), 20, 10);
+                                if (Chat.completeChat(arrayOf("Okay, here's 200 numulites.", "Tap here to continue")) {
                                     Condition.wait(() -> !Chat.chatting(), 500, 10);
                                     // You will automatically enter the location now.
                                 }
@@ -98,10 +88,6 @@ public class ReturnToArea extends Task {
         Condition.wait(() -> Constants.ON_ISLAND.contains(Players.local()), 100, 18);
         
 
-
-        if (numuliteUnlock = false) {
-            // 
-        }
         Item weapon = Equipment.itemAt(Equipment.Slot.MAIN_HAND);
         Item offhand = Equipment.itemAt(Equipment.Slot.OFF_HAND);
 //        Open equipment widget
@@ -109,13 +95,6 @@ public class ReturnToArea extends Task {
             if (!Inventory.isFull()) {
                 weapon.interact("Remove");
                 Condition.wait(() -> !Equipment.itemAt(Equipment.Slot.MAIN_HAND).valid(), 35, 15);
-            } else {
-                if (Bank.inViewport()) {
-                    Condition.wait(() -> Bank.open(), 50, 10);
-                    if (Bank.opened()) {
-                        Bank.depositAllExcept("");
-                    }
-                }
             }
         }
         if (offhand.valid()) {
@@ -130,11 +109,17 @@ public class ReturnToArea extends Task {
     @Override
     public boolean activate() {
         return !Constants.DRIFT_NET_AREA.contains(Players.local());
-
     }
 
     @Override
     public void execute() {
+        if (!numuliteUnlock) {
+            Movement.builder(Constants.UNDER_WATER_NEXT_TO_TUNNEL.getRandomTile()).setAutoRun(true).setUseTeleports(true).move();
+
+        } else {
+            Movement.builder(Constants.DRIFT_NET_AREA.getRandomTile()).setAutoRun(true).setUseTeleports(true).move();
+        }
+
 //        Okay, we know the guy is outside of the area, now we need to get him back. So let's do checks along the way to identify where he is at.
         if (Constants.DRIFT_ENTRANCE.contains(Players.local())) {
             InDriftEntrance();

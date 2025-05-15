@@ -2,10 +2,7 @@ package org.sam;
 import org.powbot.api.script.*;
 import org.powbot.mobile.script.ScriptManager;
 import org.powbot.mobile.service.ScriptUploader;
-import org.sam.Tasks.BuildNet;
-import org.sam.Tasks.ChaseFish;
-import org.sam.Tasks.LootNet;
-import org.sam.Tasks.SeaweedSporePickup;
+import org.sam.Tasks.*;
 
 import java.util.ArrayList;
 
@@ -37,9 +34,9 @@ import java.util.ArrayList;
         category = ScriptCategory.Fishing, ScriptCategory.Hunter
 )
 public class DriftNetFishing extends AbstractScript {
-        var NumuliteUnlock = false;
-        var Harpoon = "";
-        var Stamina = false;
+        Boolean NumuliteUnlock;
+        String Harpoon = "";
+        Boolean Stamina;
 
     private final ArrayList<Task> taskList = new ArrayList<Task>();
 
