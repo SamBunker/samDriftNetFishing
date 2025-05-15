@@ -79,4 +79,5 @@ public class Constants {
     public static final String STAMINA_TWO = "Stamina potion(2)";
     public static final String STAMINA_ONE = "Stamina potion(1)";
     public static final String NUMULITE = "Numulite";
+    public static final String DRIFT_NET = "Drift net";
 }
