@@ -1,6 +1,7 @@
 package org.sam.Tasks;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
+import org.sam.Constants;
 import org.sam.DriftNetFishing;
 import org.sam.Task;
 
@@ -15,13 +16,13 @@ public class BuildNet extends Task {
 
     @Override
     public boolean activate() {
-        GameObject netAnchor = Objects.stream().within(10).name("Drift net anchors").action("Set up").nearest().first();
+        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).nearest().first();
         return netAnchor.valid();
     }
 
     @Override
     public void execute() {
-        GameObject netAnchor = Objects.stream().within(10).name("Drift net anchors").action("Set up").nearest().first();
+        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).nearest().first();
         if (!netAnchor.valid()) return;
 
         if (netAnchor.inViewport()) {
@@ -32,6 +33,7 @@ public class BuildNet extends Task {
             } else {
                 Camera.turnTo(netAnchor);
                 Movement.step(netAnchor.tile());
+                Condition.wait(() -> !Players.local().inMotion(), 50, 100);
             }
         }
     }

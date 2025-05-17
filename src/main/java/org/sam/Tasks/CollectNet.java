@@ -26,25 +26,31 @@ public class CollectNet extends Task {
 
     @Override
     public void execute() {
-        Npc annette = Npcs.stream().name("Annette").nearest().first();
+        Npc net_lady = Npcs.stream().id(Constants.NPC_ANNETTE).nearest().first();
 
-        if (!annette.valid()) {
+        if (!net_lady.valid()) {
             Notifications.showNotification("Can't find Annette. Stopping the script!");
             ScriptManager.INSTANCE.stop();
             return;
         }
-        if (!annette.inViewport()) {
-            Camera.turnTo(annette);
-            Condition.wait(annette::inViewport, 100, 20);
+        if (!net_lady.inViewport()) {
+            Camera.turnTo(net_lady);
+            Condition.wait(() -> net_lady.inViewport(), 100, 20);
         }
 
-        if (annette.interact("Nets")) {
-//            Handle taking nets
-            Condition.sleep(1000);
+        if (net_lady.interact("Nets")) {
+            Long firstCheck = Inventory.stream().name("Drift net").count();
+            if (Widgets.component(309, 0).visible()) {
+                Widgets.component(309, 0).interact("Withdraw-5");
+                Long secondCheck = Inventory.stream().name("Drift net").count();
+                if (!(secondCheck > firstCheck)) {
+                    Notifications.showNotification("You ran out of drift nets!");
+                    ScriptManager.INSTANCE.stop();
+                } else {
+                    Widgets.component(309, 11).click();
+                    Condition.wait(() -> !Widgets.component(309, 11).visible(), 10, 20);
+                }
+            }
         }
-
-
     }
-
-
 }

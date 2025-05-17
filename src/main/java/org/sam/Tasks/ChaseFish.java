@@ -26,21 +26,22 @@ public class ChaseFish extends Task {
 
     @Override
     public boolean activate() {
-        return true;
+        return Constants.DRIFT_NET_AREA.contains(Players.local());
     }
 
     @Override
     public void execute() {
-        Npc target = Npcs.stream().name("Fish shoal").filter(npc -> (Constants.EAST_NET.contains(npc.tile()) || Constants.SOUTH_NET.contains(npc.tile())) && !chasedFish.contains(npc.index())).nearest().first();
+        Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).filter(npc -> (Constants.EAST_NET.contains(npc.tile()) || Constants.SOUTH_NET.contains(npc.tile())) && !chasedFish.contains(npc.index())).nearest().first();
+        //Npc target = Npcs.stream().name("Fish shoal").filter(npc -> (Constants.EAST_NET.contains(npc.tile()) || Constants.SOUTH_NET.contains(npc.tile())) && !chasedFish.contains(npc.index())).nearest().first();
 
-        if (!target.valid()) {
-            target = Npcs.stream().name("Fish shoal").filter(npc -> Constants.STALE_AREA.contains(npc.tile()) && !chasedFish.contains(npc.index())).nearest().first();
+        if (!Constants.EAST_NET.contains(fish_shoal) && !Constants.SOUTH_NET.contains(fish_shoal)) {
+            fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).filter(npc -> Constants.STALE_AREA.contains(npc.tile()) && !chasedFish.contains(npc.index())).nearest().first();
         }
 
-        if (target.valid()) {
-            if (target.inViewport() || Movement.step(target)) {
-                if (target.interact("Chase")) {
-                    chasedFish.add(target.index());
+        if (fish_shoal.valid()) {
+            if (fish_shoal.inViewport() || Movement.step(fish_shoal)) {
+                if (fish_shoal.interact("Chase")) {
+                    chasedFish.add(fish_shoal.index());
                     chaseCount++;
                     Condition.wait(() -> !Players.local().inMotion() && Players.local().animation() == -1, 100, 15);
 
@@ -51,8 +52,9 @@ public class ChaseFish extends Task {
                     }
                 }
             } else {
-                Camera.turnTo(target);
-                Movement.step(target.tile());
+                Camera.turnTo(fish_shoal);
+                Movement.step(fish_shoal.tile());
+                Condition.wait(() -> !Players.local().inMotion(), 20, 15);
             }
         } else {
             Notifications.showNotification("No fish found! What the heck?");

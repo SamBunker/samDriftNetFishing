@@ -1,9 +1,7 @@
 package org.sam.Tasks;
 import org.powbot.api.Condition;
-import org.powbot.api.rt4.Chat;
-import org.powbot.api.rt4.GameObject;
-import org.powbot.api.rt4.Objects;
-import org.powbot.api.rt4.Widgets;
+import org.powbot.api.rt4.*;
+import org.sam.Constants;
 import org.sam.DriftNetFishing;
 import org.sam.Task;
 
@@ -18,23 +16,25 @@ public class LootNet extends Task {
 
     @Override
     public boolean activate() {
-        GameObject net = Objects.stream().within(10).name("Drift net anchors").action("Harvest").nearest().first();
+        GameObject net = Objects.stream().id(Constants.DRIFT_NET_FULL).nearest().first();
         return net.valid();
     }
 
     @Override
     public void execute() {
-        GameObject net = Objects.stream().within(10).name("Drift net anchors").action("Harvest").nearest().first();
+        GameObject net = Objects.stream().id(Constants.DRIFT_NET_FULL).nearest().first();
         if (net.valid() && net.interact("Harvest")) {
-            Condition.wait(() -> Chat.canContinue() || Chat.optionCount() > 0, 100, 20);
+            Condition.wait(() -> Chat.chatting(), 25, 20);
 
-            if (Chat.optionCount() > 0) {
-                Chat.selectOption(0);
+            if (Chat.chatting()) {
+                Chat.sendInput(0);
             }
-
-            Condition.wait(() -> Widgets.component(12, 22).viosible(), 100, 30);
-            if (Widgets.component(12, 22).visible()) {
-                Widgets.component(12,22).click();
+            Condition.wait(() -> Widgets.component(607, 0).visible(), 100, 30);
+            if (Widgets.component(607, 6).visible()) {
+                Widgets.component(607, 6).click();
+                Condition.wait(() -> Widgets.component(607, 9).visible(), 10, 15);
+                Widgets.component(607, 9).click();
+                Condition.wait(() -> !Widgets.component(607, 9).visible(), 20, 15);
             }
         }
     }

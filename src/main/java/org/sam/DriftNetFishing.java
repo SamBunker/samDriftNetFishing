@@ -31,7 +31,7 @@ import java.util.ArrayList;
         description = "Begin in area, discards fish.",
         author = "Sam",
         version = "1",
-        category = ScriptCategory.Fishing, ScriptCategory.Hunter
+        category = ScriptCategory.Fishing
 )
 public class DriftNetFishing extends AbstractScript {
         Boolean NumuliteUnlock;
@@ -69,26 +69,3 @@ public class DriftNetFishing extends AbstractScript {
         }
     }
 }
-
-
-// Net Fishing Script
-// Check headslot for "Fishbowl helmet"
-// Check cape for "Diving apparatus"
-// Check boots for "Flippers"
-// Check inventory for "Dragon harpoon"
-//
-// Check inventory for Drift net, if none, go to (x=10714, y=11236) -> Nets Annette -> Check net amount (if none, stop script with notification) -> Withdraw-5 Drift net (twice) (check for nets entering inventory)
-//
-// Picking up Seaweed spore (Take Seaweed spore)
-//
-//
-// south-net collection tiles range: x= 13598, y=15452 to x=13598, y=15448
-// east-net collection tiles range: x= 13602, y=15457 to x=13605, y=15457
-//
-// south-net tile area: 13598(13595), 15452(15448)
-// east-net tile area: 13599(13605),15457(15461)
-// stale-area tile range: 13598(13593), 15460(15453)
-// Harvest Drift net anchors -> (Harvest the fish and destroy the net.) option 1 -> Discard all
-// Set up Drift net anchors
-//
-// Chase Fish shoal -> move to the next, do not interact with the same one multiple times
