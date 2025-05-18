@@ -9,10 +9,6 @@ public class CameraActions {
         super();
     }
 
-    private void goToMiniMapZoom() {
-        checkZoom();
-    }
-
     private void openSettings() {
         if (!Widgets.component(601, 69).visible()) {
             if (Widgets.component(601, 95).interact("Show More")) {
@@ -69,18 +65,21 @@ public class CameraActions {
 
     public void AdjustMinimapSettings() {
         openSettings();
+        Condition.sleep(50);
         displaySettings();
+        Condition.sleep(50);
         Component controlSettings = Widgets.component(116, 0);
         if (controlSettings.visible()) {
             controlSettings.interact("All Settings");
             Condition.wait(() -> Widgets.component(134, 0).visible(), 50, 15);
+            Condition.sleep(50);
             Component interfaces = Widgets.component(134, 6);
             Component settingsContainer = Widgets.component(134, 13);
             if (interfaces.visible()) {
                 interfaces.click();
                 Condition.wait(() -> settingsContainer.visible(), 50, 15);
 
-                Component settingsScrollbar = Widgets.component(134, 20);
+                Component settingsScrollbar = Widgets.component(134, 1);
                 Component miniZoomWidget = Widgets.component(134, 70);
 
                 Widgets.scrollIncrementally(settingsScrollbar, settingsContainer, miniZoomWidget);

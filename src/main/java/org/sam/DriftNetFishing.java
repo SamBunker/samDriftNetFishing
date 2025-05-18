@@ -67,6 +67,8 @@ public class DriftNetFishing extends AbstractScript {
         if (compass.visible()) {
             compass.interact("Look North");
         }
+        CameraActions cameraActions = new CameraActions();
+        cameraActions.MinimapZoomHalf();
         NumuliteUnlock = getOption("NumuliteUnlock");
         Harpoon = getOption("Harpoon");
         Stamina = getOption("Stamina");
