@@ -7,9 +7,6 @@ import org.sam.Constants;
 import org.sam.Task;
 import org.sam.DriftNetFishing;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class CollectNet extends Task {
     DriftNetFishing main;
 

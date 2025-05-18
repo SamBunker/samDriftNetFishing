@@ -1,8 +1,11 @@
 package org.sam.Tasks;
 
 import org.powbot.api.Condition;
+import org.powbot.api.Tile;
 import org.powbot.api.rt4.*;
 import org.powbot.api.rt4.walking.WebWalkingResult;
+import org.powbot.dax.api.DaxWalker;
+import org.powbot.dax.api.models.RunescapeBank;
 import org.sam.Constants;
 import org.sam.DriftNetFishing;
 import org.sam.Task;
@@ -100,23 +103,43 @@ public class ReturnToArea extends Task {
         }
     }
 
+    Npc annetta = Npcs.stream().id(Constants.NPC_ANNETTE).within(10).nearest().first();
+
+
     @Override
     public boolean activate() {
-        return !Constants.DRIFT_NET_AREA.contains((Players.local()));
+        return !annetta.reachable();
     }
 
     @Override
     public void execute() {
-        WebWalkingResult result = Movement.builder(Constants.DRIFT_NET_AREA.getRandomTile()).setAutoRun(true).setUseTeleports(true).move();
-        if (!result.getSuccess()) {
-            if (Constants.ON_ISLAND.contains(Players.local())) {
-                OnIsland();
-                Movement.builder(Constants.DRIFT_NET_AREA.getRandomTile()).setAutoRun(true).setUseTeleports(true).move();
+        if (annetta.valid()) {
+            if (annetta.inViewport()) {
+                GameObject door = Objects.stream().name("Plant door").first();
+                if (door.interact("Navigate")) {
+                    Condition.wait(() -> Players.local().interacting().inMotion(), 50, 14);
+                    return;
+                }
+            } else {
+                Camera.turnTo(annetta);
+                Movement.moveTo(annetta);
             }
-            if (Constants.DRIFT_ENTRANCE.contains(Players.local())) {
-                GameObject tunnel_entrance = Objects.stream().id(Constants.TUNNEL).nearest().first();
-                if (tunnel_entrance.valid()) {
+        } else {
+            GameObject tunnel_entrance = Objects.stream().id(Constants.TUNNEL).nearest().first();
+            if (tunnel_entrance.valid()) {
+                if (tunnel_entrance.inViewport()) {
                     tunnel_entrance.interact("Pay");
+                    Condition.wait(() -> , 80, 12);
+                } else {
+                    Camera.turnTo(tunnel_entrance);
+                    Movement.moveTo(tunnel_entrance);
+                }
+            } else {
+                if (!Constants.ON_ISLAND.contains(Players.local())) {
+                    Movement.builder(RunescapeBank.FOSSIL_ISLAND.getPosition());
+                    Movement.builder(Constants.ON_ISLAND.getRandomTile());
+                } else {
+                    OnIsland();
                 }
             }
         }

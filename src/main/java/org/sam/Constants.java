@@ -28,14 +28,14 @@ public class Constants {
 //    Pay, check if Numulite in inventory if not already withdrawn from the bank
 //    Tap here to continue, option(0, or 1), Okay, here's 200 numulites., Tap here to continue, (auto enters area)
 
-
+    public static Area ROWBOAT_AREA = new Area(new Tile(3721, 3807, 0), new Tile(3727, 3809, 0));
     public static Area DRIFT_ENTRANCE = new Area(new Tile(11473,1440,1), new Tile(11479,1443,1));
-    public static Area DRIFT_NET_AREA = new Area(new Tile(0,0,0), new Tile(0,0,0));
-    public static Area SOUTH_NET = new Area(new Tile(13598, 15452, 0), new Tile(13595, 15448, 0));
-    public static Area EAST_NET = new Area(new Tile(13599, 15457, 0), new Tile(13605, 15461, 0));
-    public static Area STALE_AREA = new Area(new Tile(13598, 15460, 0), new Tile(13593, 15453, 0));
-    public static Area SOUTH_NET_COLLECTION = new Area(new Tile(13598, 15452, 0), new Tile(13598, 15448, 0));
-    public static Area EAST_NET_COLLECTION = new Area(new Tile(13602, 15457, 0), new Tile(13605, 15457, 0));
+    public static Area DRIFT_NET_AREA = new Area(new Tile(13786,1240,1), new Tile(13797,1253,1));
+    public static Area SOUTH_NET = new Area(new Tile(13598, 15452, 1), new Tile(13595, 15448, 1));
+    public static Area EAST_NET = new Area(new Tile(13599, 15457, 1), new Tile(13605, 15461, 1));
+    public static Area STALE_AREA = new Area(new Tile(13598, 15460, 1), new Tile(13593, 15453, 1));
+    public static Area SOUTH_NET_COLLECTION = new Area(new Tile(13598, 15452, 1), new Tile(13598, 15448, 1));
+    public static Area EAST_NET_COLLECTION = new Area(new Tile(13602, 15457, 1), new Tile(13605, 15457, 1));
     public static final String SEAWEEDSPORE = "Seaweed spore";
     public static final String NET_NAME = "Drift net";
 
@@ -54,6 +54,8 @@ public class Constants {
     public static final String DRIFT_NET = "Drift net";
 
     public static final Integer DRIFT_NET_EMPTY = 30952;
+    public static final Integer DRIFT_NET_NET = 30953;
+    public static final Integer DRIFT_NET_AND_FSH = 30954;
     public static final Integer DRIFT_NET_FULL = 30955;
     public static final Integer FISH_SHOAL = 7782;
 }

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 })
 
 @ScriptManifest(
-        name = "Sam's Drift Net Fishing",
+        name = "Sam Drift Net",
         description = "Begin in area, discards fish.",
         author = "Sam",
         version = "1",
@@ -41,7 +41,7 @@ public class DriftNetFishing extends AbstractScript {
     private final ArrayList<Task> taskList = new ArrayList<Task>();
 
     public static void main(String[] args) {
-        new ScriptUploader().uploadAndStart("Sam Drift Net", "", "localhost:5575", true, true);
+        new ScriptUploader().uploadAndStart("Sam Drift Net", "", "R52T90A6VCM", true, false);
     }
 
     @Override

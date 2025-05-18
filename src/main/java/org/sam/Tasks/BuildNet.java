@@ -16,13 +16,13 @@ public class BuildNet extends Task {
 
     @Override
     public boolean activate() {
-        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).nearest().first();
+        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).within(15).nearest().first();
         return netAnchor.valid();
     }
 
     @Override
     public void execute() {
-        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).nearest().first();
+        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).within(15).nearest().first();
         if (!netAnchor.valid()) return;
 
         if (netAnchor.inViewport()) {

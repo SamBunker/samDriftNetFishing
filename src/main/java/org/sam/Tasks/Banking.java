@@ -38,7 +38,7 @@ public class Banking extends Task {
 
     @Override
     public boolean activate() {
-        return (hasItem(harpoon)) || (hasItem(FISHBOWL_HELMET)) || (hasItem(DIVING_APPARATUS)) || (hasItem(FLIPPERS));
+        return (!hasItem(harpoon)) || (!hasItem(FISHBOWL_HELMET)) || (!hasItem(DIVING_APPARATUS)) || (!hasItem(FLIPPERS));
     }
 
     @Override

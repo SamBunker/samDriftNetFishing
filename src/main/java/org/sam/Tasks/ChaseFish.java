@@ -2,13 +2,12 @@ package org.sam.Tasks;
 import org.powbot.api.Condition;
 import org.powbot.api.Notifications;
 import org.powbot.api.rt4.*;
+import org.powbot.api.rt4.Objects;
 import org.sam.Task;
 import org.sam.Constants;
 import org.sam.DriftNetFishing;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class ChaseFish extends Task {
     DriftNetFishing main;
@@ -24,20 +23,27 @@ public class ChaseFish extends Task {
         this.main = main;
     }
 
+    Boolean annetta = Npcs.stream().id(Constants.NPC_ANNETTE).within(10).nearest().first().reachable();
+
     @Override
     public boolean activate() {
-        return Constants.DRIFT_NET_AREA.contains(Players.local());
+        return annetta;
     }
 
     @Override
     public void execute() {
-        Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).filter(npc -> (Constants.EAST_NET.contains(npc.tile()) || Constants.SOUTH_NET.contains(npc.tile())) && !chasedFish.contains(npc.index())).nearest().first();
-        //Npc target = Npcs.stream().name("Fish shoal").filter(npc -> (Constants.EAST_NET.contains(npc.tile()) || Constants.SOUTH_NET.contains(npc.tile())) && !chasedFish.contains(npc.index())).nearest().first();
-
-        if (!Constants.EAST_NET.contains(fish_shoal) && !Constants.SOUTH_NET.contains(fish_shoal)) {
-            fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).filter(npc -> Constants.STALE_AREA.contains(npc.tile()) && !chasedFish.contains(npc.index())).nearest().first();
+        List<GameObject> nets = new ArrayList<>();
+        Objects.stream()
+                .filter(obj -> obj.id() == Constants.DRIFT_NET_EMPTY
+                    || obj.id() == Constants.DRIFT_NET_NET
+                    || obj.id() == Constants.DRIFT_NET_AND_FSH
+                    || obj.id() == Constants.DRIFT_NET_FULL)
+                .forEach(nets::add);
+        
+        Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).filter(npc -> nets.stream().anyMatch(net -> net.tile().distanceTo(npc.tile()) <= 4) && !chasedFish.contains(npc.index())).nearest().first();
+        if (!fish_shoal.valid()) {
+            fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).within(15).nearest().first();
         }
-
         if (fish_shoal.valid()) {
             if (fish_shoal.inViewport() || Movement.step(fish_shoal)) {
                 if (fish_shoal.interact("Chase")) {
