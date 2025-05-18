@@ -20,48 +20,6 @@ public class ReturnToArea extends Task {
         this.main = main;
     }
 
-    public void InUnderwaterEntrance() {
-        Npc Ceto = Npcs.stream().id(Constants.NPC_CETO).nearest().first();
-        
-        if (Ceto.valid()) {
-            if (!Ceto.inViewport()) {
-                Camera.turnTo(Ceto);
-                Movement.moveTo(Ceto);
-                Condition.wait(() -> !Players.local().inMotion(), 80, 15);
-            }
-
-            if (Ceto.inViewport()) {
-                Ceto.interact("Pay");
-                if (Chat.chatting()) {
-                    Condition.wait(() -> Chat.chatting(), 20, 10);
-                    if (Chat.clickContinue()) {
-                        Condition.wait(() -> Chat.chatting(), 20, 10);
-                        if (!Chat.canContinue()) {
-                            GameObject tunnel_entrance = Objects.stream().id(Constants.TUNNEL).nearest().first();
-                            if (tunnel_entrance.valid()) {
-                                if (tunnel_entrance.inViewport()) {
-                                    tunnel_entrance.interact("Enter");
-                                    Condition.wait(() -> Constants.DRIFT_ENTRANCE.contains(Players.local()), 100, 18);
-                                } else if (!tunnel_entrance.inViewport()) {
-                                    Camera.turnTo(tunnel_entrance);
-                                    Movement.moveTo(tunnel_entrance);
-                                    Condition.wait(() -> !Players.local().inMotion(), 70, 10);
-                                    tunnel_entrance.interact("Enter");
-                                    Condition.wait(() -> Constants.DRIFT_ENTRANCE.contains(Players.local()), 100, 18);
-                                }
-                            }
-                        } else {
-                            Condition.wait(() -> !Chat.chatting(), 20, 10);
-                            if (Chat.completeChat("Okay, here's 200 numulites.", "Tap here to continue")) {
-                                Condition.wait(() -> !Chat.chatting(), 500, 10);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public void OnIsland() {
         Condition.wait(() -> Constants.ON_ISLAND.contains(Players.local()), 100, 18);
         Item weapon = Equipment.itemAt(Equipment.Slot.MAIN_HAND);
@@ -93,10 +51,8 @@ public class ReturnToArea extends Task {
             }
             if (boat.inViewport()) {
                 boat.interact("Dive");
-                Condition.wait(() -> Constants.DRIFT_ENTRANCE.contains(Players.local()), 50, 20);
+                Condition.wait(() -> Players.local().tile().distanceTo(Constants.ON_ISLAND.getRandomTile()) > 15, 50, 20);
             }
-        } else {
-            Movement.builder(Constants.DRIFT_ENTRANCE.getRandomTile()).setAutoRun(true).setUseTeleports(true).move();
         }
         if (Inventory.open()) {
             Condition.wait(() -> Inventory.opened(), 25, 15);
@@ -113,11 +69,11 @@ public class ReturnToArea extends Task {
 
     @Override
     public void execute() {
+        GameObject door = Objects.stream().name("Plant door").first();
         if (annetta.valid()) {
             if (annetta.inViewport()) {
-                GameObject door = Objects.stream().name("Plant door").first();
                 if (door.interact("Navigate")) {
-                    Condition.wait(() -> Players.local().interacting().inMotion(), 50, 14);
+                    Condition.wait(() -> !Players.local().interacting().inMotion(), 50, 14);
                     return;
                 }
             } else {
@@ -128,8 +84,16 @@ public class ReturnToArea extends Task {
             GameObject tunnel_entrance = Objects.stream().id(Constants.TUNNEL).nearest().first();
             if (tunnel_entrance.valid()) {
                 if (tunnel_entrance.inViewport()) {
+                    Movement.moveTo(Constants.DRIFT_ENTRANCE_TILE);
                     tunnel_entrance.interact("Pay");
-                    Condition.wait(() -> , 80, 12);
+                    Condition.wait(() -> Players.local().tile().distanceTo(Constants.DRIFT_ENTRANCE_TILE) > 50, 100, 12);
+                    Component compass = Widgets.component(601, 33);
+                    if (compass.visible()) {
+                        compass.interact("Look South");
+                    }
+                    door.interact("Navigate");
+                    Condition.wait(() -> !Players.local().inMotion(), 100, 15);
+                    return;
                 } else {
                     Camera.turnTo(tunnel_entrance);
                     Movement.moveTo(tunnel_entrance);

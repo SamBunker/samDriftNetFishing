@@ -29,7 +29,7 @@ public class Constants {
 //    Tap here to continue, option(0, or 1), Okay, here's 200 numulites., Tap here to continue, (auto enters area)
 
     public static Area ROWBOAT_AREA = new Area(new Tile(3721, 3807, 0), new Tile(3727, 3809, 0));
-    public static Area DRIFT_ENTRANCE = new Area(new Tile(11473,1440,1), new Tile(11479,1443,1));
+    public static Tile DRIFT_ENTRANCE_TILE = new Tile(3729, 10294, 1);
     public static Area DRIFT_NET_AREA = new Area(new Tile(13786,1240,1), new Tile(13797,1253,1));
     public static Area SOUTH_NET = new Area(new Tile(13598, 15452, 1), new Tile(13595, 15448, 1));
     public static Area EAST_NET = new Area(new Tile(13599, 15457, 1), new Tile(13605, 15461, 1));
