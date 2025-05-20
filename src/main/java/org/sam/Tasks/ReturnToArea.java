@@ -60,6 +60,8 @@ public class ReturnToArea extends Task {
     }
 
     Npc annetta = Npcs.stream().id(Constants.NPC_ANNETTE).within(10).nearest().first();
+    GameObject tunnel_entrance = Objects.stream().id(Constants.TUNNEL).nearest().first();
+    
 
 
     @Override
@@ -69,6 +71,32 @@ public class ReturnToArea extends Task {
 
     @Override
     public void execute() {
+        Component compass = Widgets.component(601, 33);
+        if (annetta.valid() && !annetta.reachable()) {
+            // if try walking to, else navigate through plant door
+            //Go through the door
+        } 
+        if (tunnel_entrance.valid() && Players.local().tile().distanceTo(tunnel_entrance) <= 3) {
+            if (tunnel_entrance.inViewport()) {
+                if (Constants.DRIFT_ENTRANCE_TILE.reachable()) {
+                    Movement.moveTo(Constants.DRIFT_ENTRANCE_TILE);
+                    tunnel_entrance.interact("Pay");
+                    Condition.wait(() -> Players.local().tile().distanceTo(Constants.DRIFT_ENTRANCE_TILE) > 2, 100, 12);
+                    if (compass.visible()) {
+                        compass.interact("Look South");
+                    }
+                } else {
+                    if (compass.visible()) {
+                        compass.interact("Look South");
+                    }
+                    
+            }
+        }
+        
+
+        
+        
+        //May need to rewrite these checks
         GameObject door = Objects.stream().name("Plant door").first();
         if (annetta.valid()) {
             if (annetta.inViewport()) {
@@ -86,7 +114,7 @@ public class ReturnToArea extends Task {
                 if (tunnel_entrance.inViewport()) {
                     Movement.moveTo(Constants.DRIFT_ENTRANCE_TILE);
                     tunnel_entrance.interact("Pay");
-                    Condition.wait(() -> Players.local().tile().distanceTo(Constants.DRIFT_ENTRANCE_TILE) > 50, 100, 12);
+                    Condition.wait(() -> Players.local().tile().distanceTo(Constants.DRIFT_ENTRANCE_TILE) > 2, 100, 12);
                     Component compass = Widgets.component(601, 33);
                     if (compass.visible()) {
                         compass.interact("Look South");
