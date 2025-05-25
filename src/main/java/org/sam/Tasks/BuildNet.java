@@ -14,15 +14,17 @@ public class BuildNet extends Task {
         this.main = main;
     }
 
+    Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).nearest().first();
+
     @Override
     public boolean activate() {
-        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).within(15).nearest().first();
-        return netAnchor.valid();
+        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).nearest().first();
+        return (netAnchor.valid() && netAnchor.reachable() && fish_shoal.reachable());
     }
 
     @Override
     public void execute() {
-        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).within(15).nearest().first();
+        GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).nearest().first();
         if (!netAnchor.valid()) return;
 
         if (netAnchor.inViewport()) {

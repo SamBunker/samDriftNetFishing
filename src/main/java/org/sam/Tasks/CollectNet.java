@@ -15,10 +15,11 @@ public class CollectNet extends Task {
         super.name = "Collect Net";
         this.main = main;
     }
+    Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).within(15).nearest().first();
 
     @Override
     public boolean activate() {
-        return Inventory.stream().name(Constants.NET_NAME).isEmpty();
+        return Inventory.stream().name(Constants.NET_NAME).isEmpty() && fish_shoal.reachable();
     }
 
     @Override

@@ -3,9 +3,9 @@ package org.sam.Tasks;
 import org.powbot.api.Condition;
 import org.powbot.api.Tile;
 import org.powbot.api.rt4.*;
-import org.powbot.api.rt4.walking.WebWalkingResult;
-import org.powbot.dax.api.DaxWalker;
-import org.powbot.dax.api.models.RunescapeBank;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.powbot.api.rt4.stream.locatable.interactive.GameObjectStream;
 import org.sam.Constants;
 import org.sam.DriftNetFishing;
 import org.sam.Task;
@@ -51,7 +51,7 @@ public class ReturnToArea extends Task {
             }
             if (boat.inViewport()) {
                 boat.interact("Dive");
-                Condition.wait(() -> Players.local().tile().distanceTo(Constants.ON_ISLAND.getRandomTile()) > 15, 50, 20);
+                Condition.wait(() -> Players.local().tile().distanceTo(Constants.ON_ISLAND.getRandomTile()) > 15, 200, 10);
             }
         }
         if (Inventory.open()) {
@@ -59,81 +59,54 @@ public class ReturnToArea extends Task {
         }
     }
 
-    Npc annetta = Npcs.stream().id(Constants.NPC_ANNETTE).within(10).nearest().first();
     GameObject tunnel_entrance = Objects.stream().id(Constants.TUNNEL).nearest().first();
-    
-
+    Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).within(15).nearest().first();
 
     @Override
     public boolean activate() {
-        return !annetta.reachable();
+        return !fish_shoal.reachable();
     }
 
     @Override
     public void execute() {
         Component compass = Widgets.component(601, 33);
-        if (annetta.valid() && !annetta.reachable()) {
-            // if try walking to, else navigate through plant door
-            //Go through the door
-        } 
-        if (tunnel_entrance.valid() && Players.local().tile().distanceTo(tunnel_entrance) <= 3) {
-            if (tunnel_entrance.inViewport()) {
-                if (Constants.DRIFT_ENTRANCE_TILE.reachable()) {
-                    Movement.moveTo(Constants.DRIFT_ENTRANCE_TILE);
-                    tunnel_entrance.interact("Pay");
-                    Condition.wait(() -> Players.local().tile().distanceTo(Constants.DRIFT_ENTRANCE_TILE) > 2, 100, 12);
-                    if (compass.visible()) {
-                        compass.interact("Look South");
-                    }
-                } else {
-                    if (compass.visible()) {
-                        compass.interact("Look South");
-                    }
-                    
-            }
-        }
-        
 
-        
-        
-        //May need to rewrite these checks
-        GameObject door = Objects.stream().name("Plant door").first();
-        if (annetta.valid()) {
-            if (annetta.inViewport()) {
-                if (door.interact("Navigate")) {
-                    Condition.wait(() -> !Players.local().interacting().inMotion(), 50, 14);
-                    return;
-                }
+        if (Constants.IN_GAME.contains(Players.local())) {
+//            Tile currentTile = Players.local().tile();
+//            Tile targetTile = new Tile(currentTile.x() + 6, currentTile.y() + 3);
+//            Movement.step(targetTile);
+//            Condition.wait(() -> !Players.local().inMotion(), 200, 10);
+            GameObject plantdoor = Objects.stream().name("Plant door").nearest().first();
+            if (plantdoor.reachable()) {
+                plantdoor.interact("Navigate");
+                Condition.wait(() -> !Players.local().inMotion(), 400, 10);
             } else {
-                Camera.turnTo(annetta);
-                Movement.moveTo(annetta);
+                Movement.moveTo(plantdoor.tile());
             }
-        } else {
-            GameObject tunnel_entrance = Objects.stream().id(Constants.TUNNEL).nearest().first();
-            if (tunnel_entrance.valid()) {
-                if (tunnel_entrance.inViewport()) {
-                    Movement.moveTo(Constants.DRIFT_ENTRANCE_TILE);
-                    tunnel_entrance.interact("Pay");
-                    Condition.wait(() -> Players.local().tile().distanceTo(Constants.DRIFT_ENTRANCE_TILE) > 2, 100, 12);
-                    Component compass = Widgets.component(601, 33);
-                    if (compass.visible()) {
-                        compass.interact("Look South");
-                    }
-                    door.interact("Navigate");
-                    Condition.wait(() -> !Players.local().inMotion(), 100, 15);
-                    return;
-                } else {
+            return;
+        }
+        if (Constants.UNDERWATER.contains(Players.local())) {
+            Movement.moveTo(Constants.DRIFT_ENTRANCE_CHECKPOINT_ONE.getRandomTile());
+            Condition.wait(() -> Constants.DRIFT_ENTRANCE_CHECKPOINT_ONE.contains(Players.local()), 150, 10);
+            if (tunnel_entrance.valid() && tunnel_entrance.reachable()) {
+                if (!tunnel_entrance.inViewport() && tunnel_entrance.reachable()) {
                     Camera.turnTo(tunnel_entrance);
                     Movement.moveTo(tunnel_entrance);
-                }
-            } else {
-                if (!Constants.ON_ISLAND.contains(Players.local())) {
-                    Movement.builder(RunescapeBank.FOSSIL_ISLAND.getPosition());
-                    Movement.builder(Constants.ON_ISLAND.getRandomTile());
-                } else {
-                    OnIsland();
+                    Condition.wait(() -> !Players.local().inMotion(), 200, 15);
+                } else if (tunnel_entrance.inViewport() && tunnel_entrance.reachable()) {
+                    if (Constants.DRIFT_ENTRANCE_TILE.reachable()) {
+                        Movement.moveTo((Constants.DRIFT_ENTRANCE_TILE));
+                        tunnel_entrance.interact("Pay");
+                        Condition.wait(() -> Players.local().tile().distanceTo(Constants.DRIFT_ENTRANCE_TILE) > 2, 500, 12);
+                        if (compass.visible()) {
+                            compass.interact("Look South");
+                        }
+                    }
                 }
             }
+        }
+        if (Constants.ON_ISLAND.contains(Players.local())) {
+            OnIsland();
         }
     }
 }

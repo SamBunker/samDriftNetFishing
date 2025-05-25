@@ -23,11 +23,11 @@ public class ChaseFish extends Task {
         this.main = main;
     }
 
-    Boolean annetta = Npcs.stream().id(Constants.NPC_ANNETTE).within(10).nearest().first().reachable();
+    Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).within(15).nearest().first();
 
     @Override
     public boolean activate() {
-        return annetta;
+        return fish_shoal.reachable();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ChaseFish extends Task {
             } else {
                 Camera.turnTo(fish_shoal);
                 Movement.step(fish_shoal.tile());
-                Condition.wait(() -> !Players.local().inMotion(), 20, 15);
+                Condition.wait(() -> !Players.local().inMotion(), 301, 20);
             }
         } else {
             Notifications.showNotification("No fish found! What the heck?");

@@ -28,14 +28,13 @@ public class Constants {
 //    Pay, check if Numulite in inventory if not already withdrawn from the bank
 //    Tap here to continue, option(0, or 1), Okay, here's 200 numulites., Tap here to continue, (auto enters area)
 
-    public static Area ROWBOAT_AREA = new Area(new Tile(3721, 3807, 0), new Tile(3727, 3809, 0));
+    public static Tile ROWBOAT_LOCATION = new Tile(3724, 3808, 0);
     public static Tile DRIFT_ENTRANCE_TILE = new Tile(3729, 10294, 1);
-    public static Area DRIFT_NET_AREA = new Area(new Tile(13786,1240,1), new Tile(13797,1253,1));
-    public static Area SOUTH_NET = new Area(new Tile(13598, 15452, 1), new Tile(13595, 15448, 1));
-    public static Area EAST_NET = new Area(new Tile(13599, 15457, 1), new Tile(13605, 15461, 1));
-    public static Area STALE_AREA = new Area(new Tile(13598, 15460, 1), new Tile(13593, 15453, 1));
-    public static Area SOUTH_NET_COLLECTION = new Area(new Tile(13598, 15452, 1), new Tile(13598, 15448, 1));
-    public static Area EAST_NET_COLLECTION = new Area(new Tile(13602, 15457, 1), new Tile(13605, 15457, 1));
+    public static Area DRIFT_ENTRANCE_CHECKPOINT_ONE = new Area(new Tile(3730, 10287, 1), new Tile(3731, 10310, 1));
+    public static Area BARGE_LOCATION = new Area(new Tile (3358,3446,0), new Tile(3363,3444, 0));
+    public static Area UNDERWATER = new Area(new Tile(3726, 10261, 1), new Tile(3752, 10320, 1));
+    public static Area IN_GAME = new Area(new Tile(5000, 1000, 1), new Tile(25000, 30000, 1));
+
     public static final String SEAWEEDSPORE = "Seaweed spore";
     public static final String NET_NAME = "Drift net";
 

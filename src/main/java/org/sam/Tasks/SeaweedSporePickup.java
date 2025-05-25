@@ -15,17 +15,18 @@ public class SeaweedSporePickup extends Task {
         this.main = main;
     }
 
+    Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).within(15).nearest().first();
 
     @Override
     public boolean activate() {
-        return Constants.DRIFT_NET_AREA.contains(GroundItems.stream().name(Constants.SEAWEEDSPORE).first());
+        return GroundItems.stream().name(Constants.SEAWEEDSPORE).first().reachable() && fish_shoal.reachable();
     }
 
     @Override
     public void execute() {
         GroundItem spore = GroundItems.stream().name(Constants.SEAWEEDSPORE).nearest().first();
-        if (!spore.valid()) return;
-        if (Constants.DRIFT_NET_AREA.contains(spore)) {
+        if (!spore.valid() || !spore.reachable()) return;
+        if (spore.reachable()) {
             if (spore.inViewport()) {
                 if (spore.interact("Take")) {
                     Condition.wait(() -> !spore.valid(), 100, 15);

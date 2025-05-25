@@ -13,11 +13,12 @@ public class LootNet extends Task {
         super.name = "Looting the Nets";
         this.main = main;
     }
+    Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).within(15).nearest().first();
 
     @Override
     public boolean activate() {
         GameObject net = Objects.stream().id(Constants.DRIFT_NET_FULL).nearest().first();
-        return net.valid();
+        return net.valid() && fish_shoal.reachable();
     }
 
     @Override

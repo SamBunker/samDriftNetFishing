@@ -51,24 +51,24 @@ public class DriftNetFishing extends AbstractScript {
 
     @Override
     public void onStart() {
-        if (!Widgets.component(601, 69).visible()) {
-            if (Widgets.component(601, 95).interact("Show More")) {
-                Condition.wait(() -> Widgets.component(601, 69).visible(), 80, 10);
-            }
-        }
-        Game.tab(Game.Tab.SETTINGS);
-        Condition.wait(() -> Game.tab().equals(Game.Tab.SETTINGS), 40, 20);
-        Component zoomSlider = Widgets.component(116, 49);
-        if (zoomSlider.visible()) {
-            zoomSlider.click();
-        }
-        Condition.wait(() -> zoomSlider.click(), 30, 10);
-        Component compass = Widgets.component(601, 33);
-        if (compass.visible()) {
-            compass.interact("Look North");
-        }
-        CameraActions cameraActions = new CameraActions();
-        cameraActions.MinimapZoomHalf();
+//        if (!Widgets.component(601, 69).visible()) {
+//            if (Widgets.component(601, 95).interact("Show More")) {
+//                Condition.wait(() -> Widgets.component(601, 69).visible(), 80, 10);
+//            }
+//        }
+//        Game.tab(Game.Tab.SETTINGS);
+//        Condition.wait(() -> Game.tab().equals(Game.Tab.SETTINGS), 40, 20);
+//        Component zoomSlider = Widgets.component(116, 49);
+//        if (zoomSlider.visible()) {
+//            zoomSlider.click();
+//        }
+//        Condition.wait(() -> zoomSlider.click(), 30, 10);
+//        Component compass = Widgets.component(601, 33);
+//        if (compass.visible()) {
+//            compass.interact("Look North");
+//        }
+//        CameraActions cameraActions = new CameraActions();
+//        cameraActions.MinimapZoomHalf();
         NumuliteUnlock = getOption("NumuliteUnlock");
         Harpoon = getOption("Harpoon");
         Stamina = getOption("Stamina");
