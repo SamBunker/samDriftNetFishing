@@ -66,6 +66,7 @@ public class Banking extends Task {
             }
         }
 
+        // Movement to island
         Movement.builder(Constants.ON_ISLAND.getRandomTile()).setAutoRun(true).setUseTeleports(false).move();
 
         if (Bank.inViewport()) {

@@ -28,12 +28,18 @@ public class Constants {
 //    Pay, check if Numulite in inventory if not already withdrawn from the bank
 //    Tap here to continue, option(0, or 1), Okay, here's 200 numulites., Tap here to continue, (auto enters area)
 
+
     public static Tile ROWBOAT_LOCATION = new Tile(3724, 3808, 0);
     public static Tile DRIFT_ENTRANCE_TILE = new Tile(3729, 10294, 1);
     public static Area DRIFT_ENTRANCE_CHECKPOINT_ONE = new Area(new Tile(3730, 10287, 1), new Tile(3731, 10310, 1));
     public static Area BARGE_LOCATION = new Area(new Tile (3358,3446,0), new Tile(3363,3444, 0));
     public static Area UNDERWATER = new Area(new Tile(3726, 10261, 1), new Tile(3752, 10320, 1));
     public static Area IN_GAME = new Area(new Tile(5000, 1000, 1), new Tile(25000, 30000, 1));
+    public static Area DIGSITE_AREA = new Area(new Tile(3303, 3455, 0), new Tile(3382, 3403, 0));
+    public static Area DIGSITE_GLIDER = new Area(new Tile(3320, 3433, 0), new Tile(3326, 3426, 0));
+    public static Area DIGSITE_CHECKONE = new Area(new Tile(3332, 3440, 0), new Tile(3342,3444, 0));
+    public static Area DIGSITE_CHECKTWO = new Area(new Tile(3352, 3445, 0), new Tile(3349, 3443, 0));
+    public static Area DIGSITE_CHECKTHREE = new Area(new Tile(3358, 3446, 0), new Tile(3355, 3443, 0));
 
     public static final String SEAWEEDSPORE = "Seaweed spore";
     public static final String NET_NAME = "Drift net";

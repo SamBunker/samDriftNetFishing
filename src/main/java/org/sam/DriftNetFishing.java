@@ -74,6 +74,7 @@ public class DriftNetFishing extends AbstractScript {
         Stamina = getOption("Stamina");
         taskList.add(new Banking(this, NumuliteUnlock, Harpoon, Stamina));
         taskList.add(new ReturnToArea(this));
+        taskList.add(new CollectNet(this));
         taskList.add(new BuildNet(this));
         taskList.add(new LootNet(this));
         taskList.add(new SeaweedSporePickup(this));

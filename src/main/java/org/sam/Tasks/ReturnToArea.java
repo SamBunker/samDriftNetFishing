@@ -72,10 +72,6 @@ public class ReturnToArea extends Task {
         Component compass = Widgets.component(601, 33);
 
         if (Constants.IN_GAME.contains(Players.local())) {
-//            Tile currentTile = Players.local().tile();
-//            Tile targetTile = new Tile(currentTile.x() + 6, currentTile.y() + 3);
-//            Movement.step(targetTile);
-//            Condition.wait(() -> !Players.local().inMotion(), 200, 10);
             GameObject plantdoor = Objects.stream().name("Plant door").nearest().first();
             if (plantdoor.reachable()) {
                 plantdoor.interact("Navigate");
@@ -104,9 +100,78 @@ public class ReturnToArea extends Task {
                     }
                 }
             }
+            return;
         }
         if (Constants.ON_ISLAND.contains(Players.local())) {
             OnIsland();
+            return;
         }
+        if (Constants.DIGSITE_AREA.contains(Players.local())) {
+            Component inventory = Widgets.component(601, 89);
+            if (Inventory.open()) {
+                inventory.click();
+            }
+            Tile[] path = {
+                    new Tile(3325, 3432, 0),
+                    new Tile(3328, 3436, 0),
+                    new Tile(3328, 3442, 0),
+                    new Tile(3333, 3445, 0),
+                    new Tile(3341, 3444, 0),
+                    new Tile(3348, 3444, 0),
+                    new Tile(3355, 3445, 0),
+                    new Tile(3361, 3445, 0)
+            };
+//            TilePath tilepath = new TilePath(path);
+            Tile targetLocation = path[path.length-1];
+            Npc bargeGuard = Npcs.stream().name("Barge guard").within(targetLocation, 4).first();
+
+            for (Tile tile : path) {
+                if (targetLocation.distance() < 5 || (bargeGuard != null && bargeGuard.inViewport())) {
+                    break;
+                }
+                if (Movement.walkTo(tile)) {
+                    Condition.wait(() -> tile.distance() < 2 || !Players.local().inMotion(), 200, 10);
+                }
+            }
+
+//            for (int i = 0; i<path.length;i++) {
+//                if (targetLocation.distance()<5 || bargeGuard.inViewport()) {
+//                    break;
+//                } else {
+//                    tilepath.traverse();
+//                    Condition.wait(() -> Players.local().inMotion(), 200, 15);
+//                }
+//            }
+            if (bargeGuard.inViewport()) {
+                Condition.wait(() -> !Players.local().inMotion(), 200, 15);
+                Movement.moveTo(Constants.ROWBOAT_LOCATION);
+                Condition.wait(() -> Constants.ROWBOAT_LOCATION.tile() == Players.local().tile(), 100, 15);
+                Movement.moveTo(Constants.ON_ISLAND.getRandomTile());
+                Condition.wait(() -> Constants.ON_ISLAND.contains(Players.local()), 200, 20);
+                return;
+            }
+            return;
+        }
+        Movement.walkTo(Constants.DIGSITE_GLIDER.getRandomTile());
+        Condition.wait(() -> Constants.DIGSITE_GLIDER.contains(Players.local()), 200, 20);
+//
+//        Camera.turnTo(Constants.DIGSITE_CHECKONE.getCentralTile());
+//        Movement.step(Constants.DIGSITE_CHECKONE.getRandomTile());
+//        Condition.wait(() -> Constants.DIGSITE_CHECKONE.contains(Players.local()), 200, 20);
+//
+//        Camera.turnTo(Constants.DIGSITE_CHECKTWO.getCentralTile());
+//        Movement.step(Constants.DIGSITE_CHECKTWO.getRandomTile());
+//        Condition.wait(() -> Constants.DIGSITE_CHECKTWO.contains(Players.local()), 200, 20);
+//
+//        Movement.step(Constants.DIGSITE_CHECKTHREE.getRandomTile());
+//        Condition.wait(() -> Constants.DIGSITE_CHECKTHREE.contains(Players.local()), 200, 20);
+//        Movement.moveTo(Constants.ROWBOAT_LOCATION);
+//
+//        if (compass.visible()) {
+//            compass.interact("Look North");
+//        }
+//        Movement.moveTo(Constants.ON_ISLAND.getRandomTile());
+//        Condition.wait(() -> Constants.ON_ISLAND.contains(Players.local()), 200, 20);
+//        return;
     }
 }

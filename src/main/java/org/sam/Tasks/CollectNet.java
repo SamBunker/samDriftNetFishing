@@ -1,5 +1,6 @@
 package org.sam.Tasks;
 import org.powbot.api.Condition;
+import org.powbot.api.InteractableEntity;
 import org.powbot.api.Notifications;
 import org.powbot.api.rt4.*;
 import org.powbot.mobile.script.ScriptManager;
@@ -19,12 +20,12 @@ public class CollectNet extends Task {
 
     @Override
     public boolean activate() {
-        return Inventory.stream().name(Constants.NET_NAME).isEmpty() && fish_shoal.reachable();
+        return Inventory.stream().name(Constants.NET_NAME).count() == 0 && fish_shoal.reachable();
     }
 
     @Override
     public void execute() {
-        Npc net_lady = Npcs.stream().id(Constants.NPC_ANNETTE).nearest().first();
+        GameObject net_lady = Objects.stream().id(Constants.NPC_ANNETTE).nearest().first();
 
         if (!net_lady.valid()) {
             Notifications.showNotification("Can't find Annette. Stopping the script!");
@@ -37,9 +38,11 @@ public class CollectNet extends Task {
         }
 
         if (net_lady.interact("Nets")) {
+            Condition.wait(() -> Players.local().interacting() != null && Players.local().interacting().equals(net_lady), 200, 20);
             Long firstCheck = Inventory.stream().name("Drift net").count();
-            if (Widgets.component(309, 0).visible()) {
-                Widgets.component(309, 0).interact("Withdraw-5");
+            if (Widgets.component(309, 5).visible()) {
+                Widgets.component(309, 5).interact("Withdraw-5");
+                Condition.wait(() -> Inventory.stream().name("Drift net").count() > 0, 200, 20);
                 Long secondCheck = Inventory.stream().name("Drift net").count();
                 if (!(secondCheck > firstCheck)) {
                     Notifications.showNotification("You ran out of drift nets!");
