@@ -24,10 +24,11 @@ public class ChaseFish extends Task {
     }
 
     Npc fish_shoal = Npcs.stream().id(Constants.FISH_SHOAL).within(15).nearest().first();
+    GameObject netAnchor = Objects.stream().id(Constants.DRIFT_NET_EMPTY).within(Constants.IN_GAME).nearest().first();
 
     @Override
     public boolean activate() {
-        return fish_shoal.reachable();
+        return fish_shoal.reachable() && (!netAnchor.reachable() && !netAnchor.valid()) && Inventory.stream().name(Constants.NET_NAME).count() > 0;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ChaseFish extends Task {
                 if (fish_shoal.interact("Chase")) {
                     chasedFish.add(fish_shoal.index());
                     chaseCount++;
-                    Condition.wait(() -> !Players.local().inMotion() && Players.local().animation() == -1, 100, 15);
+                    Condition.wait(() -> !Players.local().inMotion() && Players.local().animation() == -1, 200, 15);
 
                     if (chaseCount >= chaseLimit) {
                         chasedFish.clear();
